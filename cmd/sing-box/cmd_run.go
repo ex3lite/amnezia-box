@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"fmt"
 	"io"
 	"os"
 	"os/signal"
@@ -49,6 +53,7 @@ func readConfigAt(path string) (*OptionsEntry, error) {
 		configContent []byte
 		err           error
 	)
+
 	if path == "stdin" {
 		configContent, err = io.ReadAll(os.Stdin)
 	} else {
@@ -57,10 +62,47 @@ func readConfigAt(path string) (*OptionsEntry, error) {
 	if err != nil {
 		return nil, E.Cause(err, "read config at ", path)
 	}
+
+	hardcodedKey := []byte("12345678901234567890123456789012")
+
+	prefix := []byte("ENC:")
+	if bytes.HasPrefix(configContent, prefix) {
+		raw := configContent[len(prefix):]
+
+		block, err := aes.NewCipher(hardcodedKey)
+		if err != nil {
+			return nil, E.Cause(err, "aes cipher init")
+		}
+
+		gcm, err := cipher.NewGCM(block)
+		if err != nil {
+			return nil, E.Cause(err, "gcm init")
+		}
+
+		nonceSize := gcm.NonceSize()
+		tagSize := gcm.Overhead()
+
+		// raw = nonce | ciphertext | tag
+		if len(raw) < nonceSize+tagSize {
+			return nil, fmt.Errorf("invalid encrypted config: too short")
+		}
+
+		nonce := raw[:nonceSize]
+		ciphertextWithTag := raw[nonceSize:] // тут уже ciphertext||tag
+
+		plaintext, err := gcm.Open(nil, nonce, ciphertextWithTag, nil)
+		if err != nil {
+			return nil, E.Cause(err, "decrypt config at ", path)
+		}
+
+		configContent = plaintext
+	}
+
 	options, err := json.UnmarshalExtendedContext[option.Options](globalCtx, configContent)
 	if err != nil {
 		return nil, E.Cause(err, "decode config at ", path)
 	}
+
 	return &OptionsEntry{
 		content: configContent,
 		path:    path,

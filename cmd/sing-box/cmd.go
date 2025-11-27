@@ -33,7 +33,7 @@ func init() {
 	mainCommand.PersistentFlags().StringArrayVarP(&configPaths, "config", "c", nil, "set configuration file path")
 	mainCommand.PersistentFlags().StringArrayVarP(&configDirectories, "config-directory", "C", nil, "set configuration directory path")
 	mainCommand.PersistentFlags().StringVarP(&workingDir, "directory", "D", "", "set working directory")
-	mainCommand.PersistentFlags().BoolVarP(&disableColor, "disable-color", "", false, "disable color output")
+	mainCommand.PersistentFlags().BoolVarP(&disableColor, "disable-color", "", false, "disable color output3")
 }
 
 func preRun(cmd *cobra.Command, args []string) {

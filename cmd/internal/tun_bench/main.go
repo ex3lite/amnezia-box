@@ -143,6 +143,7 @@ func testOnce(boxPath string, stackName string, mtu int, multiThread bool, flags
 	defer os.Remove(tempConfig.Name())
 	encoder := json.NewEncoderContext(ctx, tempConfig)
 	encoder.SetIndent("", "  ")
+
 	err = encoder.Encode(testConfig)
 	if err != nil {
 		return nil, E.Cause(err, "encode test config")
