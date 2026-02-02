@@ -20,18 +20,18 @@ func (c *PacketConn) InitializeReadWaiter(options N.ReadWaitOptions) (needCopy b
 func (c *PacketConn) WaitReadPacket() (buffer *buf.Buffer, destination M.Socksaddr, err error) {
 	destination, err = M.SocksaddrSerializer.ReadAddrPort(c.Conn)
 	if err != nil {
-		return nil, M.Socksaddr{}, E.Cause(err, "read destination")
+		return nil, M.Socksaddr{}, E.Cause(err, "чтение адреса назначения")
 	}
 
 	var length uint16
 	err = binary.Read(c.Conn, binary.BigEndian, &length)
 	if err != nil {
-		return nil, M.Socksaddr{}, E.Cause(err, "read chunk length")
+		return nil, M.Socksaddr{}, E.Cause(err, "чтение длины чанка")
 	}
 
 	err = rw.SkipN(c.Conn, 2)
 	if err != nil {
-		return nil, M.Socksaddr{}, E.Cause(err, "skip crlf")
+		return nil, M.Socksaddr{}, E.Cause(err, "пропуск crlf")
 	}
 
 	buffer = c.readWaitOptions.NewPacketBuffer()

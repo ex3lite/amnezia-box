@@ -50,7 +50,7 @@ func NewClient(ctx context.Context, dialer N.Dialer, serverAddr M.Socksaddr, opt
 	requestURL.Path = options.Path
 	err := sHTTP.URLSetPath(&requestURL, options.Path)
 	if err != nil {
-		return nil, E.Cause(err, "parse path")
+		return nil, E.Cause(err, "парсинг пути")
 	}
 	if !strings.HasPrefix(requestURL.Path, "/") {
 		requestURL.Path = "/" + requestURL.Path

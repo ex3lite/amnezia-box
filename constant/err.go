@@ -2,6 +2,6 @@ package constant
 
 import E "github.com/sagernet/sing/common/exceptions"
 
-var ErrTLSRequired = E.New("TLS required")
+var ErrTLSRequired = E.New("Требуется TLS")
 
-var ErrQUICNotIncluded = E.New(`QUIC is not included in this build, rebuild with -tags with_quic`)
+var ErrQUICNotIncluded = E.New(`QUIC не включен в эту сборку, пересоберите с -tags with_quic`)

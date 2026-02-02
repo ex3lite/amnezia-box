@@ -44,7 +44,7 @@ func HandleMuxConnection(ctx context.Context, conn net.Conn, source M.Socksaddr,
 func newMuxConnection(ctx context.Context, conn net.Conn, source M.Socksaddr, handler Handler, logger logger.ContextLogger) {
 	err := newMuxConnection0(ctx, conn, source, handler)
 	if err != nil {
-		logger.ErrorContext(ctx, E.Cause(err, "process trojan-go multiplex connection"))
+		logger.ErrorContext(ctx, E.Cause(err, "обработка мультиплексного соединения trojan-go"))
 	}
 }
 
@@ -52,11 +52,11 @@ func newMuxConnection0(ctx context.Context, conn net.Conn, source M.Socksaddr, h
 	reader := std_bufio.NewReader(conn)
 	command, err := reader.ReadByte()
 	if err != nil {
-		return E.Cause(err, "read command")
+		return E.Cause(err, "чтение команды")
 	}
 	destination, err := M.SocksaddrSerializer.ReadAddrPort(reader)
 	if err != nil {
-		return E.Cause(err, "read destination")
+		return E.Cause(err, "чтение адреса назначения")
 	}
 	if reader.Buffered() > 0 {
 		buffer := buf.NewSize(reader.Buffered())
@@ -72,7 +72,7 @@ func newMuxConnection0(ctx context.Context, conn net.Conn, source M.Socksaddr, h
 	case CommandUDP:
 		handler.NewPacketConnectionEx(ctx, &PacketConn{Conn: conn}, source, destination, nil)
 	default:
-		return E.New("unknown command ", command)
+		return E.New("неизвестная команда ", command)
 	}
 	return nil
 }

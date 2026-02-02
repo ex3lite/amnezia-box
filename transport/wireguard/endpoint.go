@@ -36,11 +36,11 @@ type Endpoint struct {
 
 func NewEndpoint(options EndpointOptions) (*Endpoint, error) {
 	if options.PrivateKey == "" {
-		return nil, E.New("missing private key")
+		return nil, E.New("отсутствует приватный ключ")
 	}
 	privateKeyBytes, err := base64.StdEncoding.DecodeString(options.PrivateKey)
 	if err != nil {
-		return nil, E.Cause(err, "decode private key")
+		return nil, E.Cause(err, "декодирование приватного ключа")
 	}
 	privateKey := hex.EncodeToString(privateKeyBytes)
 	ipcConf := "private_key=" + privateKey
@@ -60,22 +60,22 @@ func NewEndpoint(options EndpointOptions) (*Endpoint, error) {
 		}
 		publicKeyBytes, err := base64.StdEncoding.DecodeString(rawPeer.PublicKey)
 		if err != nil {
-			return nil, E.Cause(err, "decode public key for peer ", peerIndex)
+			return nil, E.Cause(err, "декодирование публичного ключа для пира ", peerIndex)
 		}
 		peer.publicKeyHex = hex.EncodeToString(publicKeyBytes)
 		if rawPeer.PreSharedKey != "" {
 			preSharedKeyBytes, err := base64.StdEncoding.DecodeString(rawPeer.PreSharedKey)
 			if err != nil {
-				return nil, E.Cause(err, "decode pre shared key for peer ", peerIndex)
+				return nil, E.Cause(err, "декодирование предварительного общего ключа для пира ", peerIndex)
 			}
 			peer.preSharedKeyHex = hex.EncodeToString(preSharedKeyBytes)
 		}
 		if len(rawPeer.AllowedIPs) == 0 {
-			return nil, E.New("missing allowed ips for peer ", peerIndex)
+			return nil, E.New("отсутствуют разрешенные IP для пира ", peerIndex)
 		}
 		if len(rawPeer.Reserved) > 0 {
 			if len(rawPeer.Reserved) != 3 {
-				return nil, E.New("invalid reserved value for peer ", peerIndex, ", required 3 bytes, got ", len(peer.reserved))
+				return nil, E.New("недопустимое зарезервированное значение для пира ", peerIndex, ", требуется 3 байта, получено ", len(peer.reserved))
 			}
 			copy(peer.reserved[:], rawPeer.Reserved[:])
 		}
@@ -109,7 +109,7 @@ func NewEndpoint(options EndpointOptions) (*Endpoint, error) {
 	}
 	tunDevice, err := NewDevice(deviceOptions)
 	if err != nil {
-		return nil, E.Cause(err, "create WireGuard device")
+		return nil, E.Cause(err, "создание устройства WireGuard")
 	}
 	return &Endpoint{
 		options:        options,
@@ -133,7 +133,7 @@ func (e *Endpoint) Start(resolve bool) error {
 			}
 			destinationAddress, err := e.options.ResolvePeer(peer.destination.Fqdn)
 			if err != nil {
-				return E.Cause(err, "resolve endpoint domain for peer[", peerIndex, "]: ", peer.destination)
+				return E.Cause(err, "резолвинг домена endpoint для пира[", peerIndex, "]: ", peer.destination)
 			}
 			e.peers[peerIndex].endpoint = netip.AddrPortFrom(destinationAddress, peer.destination.Port)
 		}
@@ -184,7 +184,7 @@ func (e *Endpoint) Start(resolve bool) error {
 	}
 	err = wgDevice.IpcSet(ipcConf)
 	if err != nil {
-		return E.Cause(err, "setup wireguard: \n", ipcConf)
+		return E.Cause(err, "настройка wireguard: \n", ipcConf)
 	}
 	e.device = wgDevice
 	e.pause = service.FromContext[pause.Manager](e.options.Context)
@@ -196,14 +196,14 @@ func (e *Endpoint) Start(resolve bool) error {
 
 func (e *Endpoint) DialContext(ctx context.Context, network string, destination M.Socksaddr) (net.Conn, error) {
 	if !destination.Addr.IsValid() {
-		return nil, E.Cause(os.ErrInvalid, "invalid non-IP destination")
+		return nil, E.Cause(os.ErrInvalid, "недопустимый не-IP адрес назначения")
 	}
 	return e.tunDevice.DialContext(ctx, network, destination)
 }
 
 func (e *Endpoint) ListenPacket(ctx context.Context, destination M.Socksaddr) (net.PacketConn, error) {
 	if !destination.Addr.IsValid() {
-		return nil, E.Cause(os.ErrInvalid, "invalid non-IP destination")
+		return nil, E.Cause(os.ErrInvalid, "недопустимый не-IP адрес назначения")
 	}
 	return e.tunDevice.ListenPacket(ctx, destination)
 }

@@ -38,7 +38,7 @@ func NewService[K comparable](handler Handler, fallbackHandler N.TCPConnectionHa
 	}
 }
 
-var ErrUserExists = E.New("user already exists")
+var ErrUserExists = E.New("пользователь уже существует")
 
 func (s *Service[K]) UpdateUsers(userList []K, passwordList []string) error {
 	users := make(map[K][56]byte)
@@ -49,7 +49,7 @@ func (s *Service[K]) UpdateUsers(userList []K, passwordList []string) error {
 		}
 		key := Key(passwordList[i])
 		if oldUser, loaded := keys[key]; loaded {
-			return E.Extend(ErrUserExists, "password used by ", oldUser)
+			return E.Extend(ErrUserExists, "пароль используется ", oldUser)
 		}
 		users[user] = key
 		keys[key] = user
@@ -65,41 +65,41 @@ func (s *Service[K]) NewConnection(ctx context.Context, conn net.Conn, source M.
 	if err != nil {
 		return err
 	} else if n != KeyLength {
-		return s.fallback(ctx, conn, source, key[:n], E.New("bad request size"), onClose)
+		return s.fallback(ctx, conn, source, key[:n], E.New("неверный размер запроса"), onClose)
 	}
 
 	if user, loaded := s.keys[key]; loaded {
 		ctx = auth.ContextWithUser(ctx, user)
 	} else {
-		return s.fallback(ctx, conn, source, key[:], E.New("bad request"), onClose)
+		return s.fallback(ctx, conn, source, key[:], E.New("неверный запрос"), onClose)
 	}
 
 	err = rw.SkipN(conn, 2)
 	if err != nil {
-		return E.Cause(err, "skip crlf")
+		return E.Cause(err, "пропуск crlf")
 	}
 
 	var command byte
 	err = binary.Read(conn, binary.BigEndian, &command)
 	if err != nil {
-		return E.Cause(err, "read command")
+		return E.Cause(err, "чтение команды")
 	}
 
 	switch command {
 	case CommandTCP, CommandUDP, CommandMux:
 	default:
-		return E.New("unknown command ", command)
+		return E.New("неизвестная команда ", command)
 	}
 
 	// var destination M.Socksaddr
 	destination, err := M.SocksaddrSerializer.ReadAddrPort(conn)
 	if err != nil {
-		return E.Cause(err, "read destination")
+		return E.Cause(err, "чтение адреса назначения")
 	}
 
 	err = rw.SkipN(conn, 2)
 	if err != nil {
-		return E.Cause(err, "skip crlf")
+		return E.Cause(err, "пропуск crlf")
 	}
 
 	switch command {

@@ -1,0 +1,68 @@
+# Makefile для мульти-модульной архитектуры
+
+NAME = amnezia-box
+COMMIT = $(shell git rev-parse --short HEAD)
+TAGS ?= with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_awg
+
+GOHOSTOS = $(shell go env GOHOSTOS)
+GOHOSTARCH = $(shell go env GOHOSTARCH)
+VERSION=$(shell CGO_ENABLED=0 GOOS=$(GOHOSTOS) GOARCH=$(GOHOSTARCH) go run github.com/sagernet/sing-box/cmd/internal/read_tag@latest)
+
+PARAMS = -v -trimpath -ldflags "-X 'github.com/sagernet/amnezia-box-core/constant.Version=$(VERSION)' -s -w -buildid="
+MAIN_PARAMS = $(PARAMS) -tags "$(TAGS)"
+
+.PHONY: build-core build-ios build-android build-windows build-linux build-server build-all
+
+# Сборка core модуля
+build-core:
+	cd core && go build $(MAIN_PARAMS) .
+
+# Сборка iOS модуля
+build-ios:
+	cd module-ios && go build $(MAIN_PARAMS) -tags ios ./cmd
+
+# Сборка Android модуля
+build-android:
+	cd module-android && go build $(MAIN_PARAMS) -tags android ./cmd
+
+# Сборка Windows модуля
+build-windows:
+	cd module-windows && go build $(MAIN_PARAMS) -tags windows ./cmd
+
+# Сборка Linux модуля
+build-linux:
+	cd module-linux && go build $(MAIN_PARAMS) -tags linux ./cmd
+
+# Сборка Server модуля
+build-server:
+	cd module-server && go build $(MAIN_PARAMS) -tags server ./cmd
+
+# Сборка всех модулей
+build-all: build-core build-ios build-android build-windows build-linux build-server
+
+# Установка зависимостей для всех модулей
+deps:
+	go work sync
+	cd core && go mod tidy
+	cd module-ios && go mod tidy
+	cd module-android && go mod tidy
+	cd module-windows && go mod tidy
+	cd module-linux && go mod tidy
+	cd module-server && go mod tidy
+
+# Очистка
+clean:
+	rm -rf core/bin module-*/bin
+	rm -rf dist
+
+# Тестирование core модуля
+test-core:
+	cd core && go test ./...
+
+# Тестирование всех модулей
+test-all: test-core
+	cd module-ios && go test ./...
+	cd module-android && go test ./...
+	cd module-windows && go test ./...
+	cd module-linux && go test ./...
+	cd module-server && go test ./...

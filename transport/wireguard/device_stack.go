@@ -65,7 +65,7 @@ func newStackDevice(options DeviceOptions) (*stackDevice, error) {
 		}
 		gErr := ipStack.AddProtocolAddress(tun.DefaultNIC, protoAddr, stack.AddressProperties{})
 		if gErr != nil {
-			return nil, E.New("parse local address ", protoAddr.AddressWithPrefix, ": ", gErr.String())
+			return nil, E.New("парсинг локального адреса ", protoAddr.AddressWithPrefix, ": ", gErr.String())
 		}
 	}
 	tunDevice.stack = ipStack
@@ -195,7 +195,7 @@ func (w *stackDevice) MTU() (int, error) {
 }
 
 func (w *stackDevice) Name() (string, error) {
-	return "sing-box", nil
+	return "Kakadu Secure Box", nil
 }
 
 func (w *stackDevice) Events() <-chan wgTun.Event {

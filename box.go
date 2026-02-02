@@ -109,19 +109,19 @@ func New(options Options) (*Box, error) {
 	serviceRegistry := service.FromContext[adapter.ServiceRegistry](ctx)
 
 	if endpointRegistry == nil {
-		return nil, E.New("missing endpoint registry in context")
+		return nil, E.New("отсутствует реестр endpoint в контексте")
 	}
 	if inboundRegistry == nil {
-		return nil, E.New("missing inbound registry in context")
+		return nil, E.New("отсутствует реестр inbound в контексте")
 	}
 	if outboundRegistry == nil {
-		return nil, E.New("missing outbound registry in context")
+		return nil, E.New("отсутствует реестр outbound в контексте")
 	}
 	if dnsTransportRegistry == nil {
-		return nil, E.New("missing DNS transport registry in context")
+		return nil, E.New("отсутствует реестр DNS транспорта в контексте")
 	}
 	if serviceRegistry == nil {
-		return nil, E.New("missing service registry in context")
+		return nil, E.New("отсутствует реестр сервисов в контексте")
 	}
 
 	ctx = pause.WithDefaultManager(ctx)
@@ -153,7 +153,7 @@ func New(options Options) (*Box, error) {
 		PlatformWriter: options.PlatformLogWriter,
 	})
 	if err != nil {
-		return nil, E.Cause(err, "create log factory")
+		return nil, E.Cause(err, "создание фабрики логов")
 	}
 
 	var internalServices []adapter.LifecycleService
@@ -186,7 +186,7 @@ func New(options Options) (*Box, error) {
 	service.MustRegister[adapter.DNSRouter](ctx, dnsRouter)
 	networkManager, err := route.NewNetworkManager(ctx, logFactory.NewLogger("network"), routeOptions)
 	if err != nil {
-		return nil, E.Cause(err, "initialize network manager")
+		return nil, E.Cause(err, "инициализация сетевого менеджера")
 	}
 	service.MustRegister[adapter.NetworkManager](ctx, networkManager)
 	connectionManager := route.NewConnectionManager(logFactory.NewLogger("connection"))
@@ -195,7 +195,7 @@ func New(options Options) (*Box, error) {
 	service.MustRegister[adapter.Router](ctx, router)
 	err = router.Initialize(routeOptions.Rules, routeOptions.RuleSet)
 	if err != nil {
-		return nil, E.Cause(err, "initialize router")
+		return nil, E.Cause(err, "инициализация роутера")
 	}
 	ntpOptions := common.PtrValueOrDefault(options.NTP)
 	var timeService *tls.TimeServiceWrapper
@@ -218,12 +218,12 @@ func New(options Options) (*Box, error) {
 			transportOptions.Options,
 		)
 		if err != nil {
-			return nil, E.Cause(err, "initialize DNS server[", i, "]")
+			return nil, E.Cause(err, "инициализация DNS сервера[", i, "]")
 		}
 	}
 	err = dnsRouter.Initialize(dnsOptions.Rules)
 	if err != nil {
-		return nil, E.Cause(err, "initialize dns router")
+		return nil, E.Cause(err, "инициализация DNS роутера")
 	}
 	for i, endpointOptions := range options.Endpoints {
 		var tag string
@@ -248,7 +248,7 @@ func New(options Options) (*Box, error) {
 			endpointOptions.Options,
 		)
 		if err != nil {
-			return nil, E.Cause(err, "initialize endpoint[", i, "]")
+			return nil, E.Cause(err, "инициализация endpoint[", i, "]")
 		}
 	}
 	for i, inboundOptions := range options.Inbounds {
@@ -267,7 +267,7 @@ func New(options Options) (*Box, error) {
 			inboundOptions.Options,
 		)
 		if err != nil {
-			return nil, E.Cause(err, "initialize inbound[", i, "]")
+			return nil, E.Cause(err, "инициализация inbound[", i, "]")
 		}
 	}
 	for i, outboundOptions := range options.Outbounds {
@@ -293,7 +293,7 @@ func New(options Options) (*Box, error) {
 			outboundOptions.Options,
 		)
 		if err != nil {
-			return nil, E.Cause(err, "initialize outbound[", i, "]")
+			return nil, E.Cause(err, "инициализация outbound[", i, "]")
 		}
 	}
 	for i, serviceOptions := range options.Services {
@@ -311,7 +311,7 @@ func New(options Options) (*Box, error) {
 			serviceOptions.Options,
 		)
 		if err != nil {
-			return nil, E.Cause(err, "initialize service[", i, "]")
+			return nil, E.Cause(err, "инициализация сервиса[", i, "]")
 		}
 	}
 	outboundManager.Initialize(func() (adapter.Outbound, error) {
@@ -333,7 +333,7 @@ func New(options Options) (*Box, error) {
 	if platformInterface != nil {
 		err = platformInterface.Initialize(networkManager)
 		if err != nil {
-			return nil, E.Cause(err, "initialize platform interface")
+			return nil, E.Cause(err, "инициализация платформенного интерфейса")
 		}
 	}
 	if needCacheFile {
@@ -346,7 +346,7 @@ func New(options Options) (*Box, error) {
 		clashAPIOptions.ModeList = experimental.CalculateClashModeList(options.Options)
 		clashServer, err := experimental.NewClashServer(ctx, logFactory.(log.ObservableFactory), clashAPIOptions)
 		if err != nil {
-			return nil, E.Cause(err, "create clash-server")
+			return nil, E.Cause(err, "создание clash-сервера")
 		}
 		router.AppendTracker(clashServer)
 		service.MustRegister[adapter.ClashServer](ctx, clashServer)
@@ -355,7 +355,7 @@ func New(options Options) (*Box, error) {
 	if needV2RayAPI {
 		v2rayServer, err := experimental.NewV2RayServer(logFactory.NewLogger("v2ray-api"), common.PtrValueOrDefault(experimentalOptions.V2RayAPI))
 		if err != nil {
-			return nil, E.Cause(err, "create v2ray-server")
+			return nil, E.Cause(err, "создание v2ray-сервера")
 		}
 		if v2rayServer.StatsService() != nil {
 			router.AppendTracker(v2rayServer.StatsService())
@@ -366,7 +366,7 @@ func New(options Options) (*Box, error) {
 	if ntpOptions.Enabled {
 		ntpDialer, err := dialer.New(ctx, ntpOptions.DialerOptions, ntpOptions.ServerIsDomain())
 		if err != nil {
-			return nil, E.Cause(err, "create NTP service")
+			return nil, E.Cause(err, "создание NTP сервиса")
 		}
 		ntpService := ntp.NewService(ntp.Options{
 			Context:       ctx,
@@ -412,7 +412,7 @@ func (s *Box) PreStart() error {
 		s.Close()
 		return err
 	}
-	s.logger.Info("sing-box pre-started (", F.Seconds(time.Since(s.createdAt).Seconds()), "s)")
+	s.logger.Info("Kakadu Secure Box pre-started (", F.Seconds(time.Since(s.createdAt).Seconds()), "s)")
 	return nil
 }
 
@@ -431,7 +431,7 @@ func (s *Box) Start() error {
 		s.Close()
 		return err
 	}
-	s.logger.Info("sing-box started (", F.Seconds(time.Since(s.createdAt).Seconds()), "s)")
+	s.logger.Info("Kakadu Secure Box started (", F.Seconds(time.Since(s.createdAt).Seconds()), "s)")
 	return nil
 }
 
@@ -441,7 +441,7 @@ func (s *Box) preStart() error {
 	err := s.logFactory.Start()
 	monitor.Finish()
 	if err != nil {
-		return E.Cause(err, "start logger")
+		return E.Cause(err, "запуск логгера")
 	}
 	err = adapter.StartNamed(adapter.StartStateInitialize, s.internalService) // cache-file clash-api v2ray-api
 	if err != nil {
@@ -502,11 +502,11 @@ func (s *Box) Close() error {
 	)
 	for _, lifecycleService := range s.internalService {
 		err = E.Append(err, lifecycleService.Close(), func(err error) error {
-			return E.Cause(err, "close ", lifecycleService.Name())
+			return E.Cause(err, "закрытие ", lifecycleService.Name())
 		})
 	}
 	err = E.Append(err, s.logFactory.Close(), func(err error) error {
-		return E.Cause(err, "close logger")
+		return E.Cause(err, "закрытие логгера")
 	})
 	return err
 }

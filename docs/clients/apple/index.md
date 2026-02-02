@@ -21,11 +21,6 @@ platform-specific function implementation, such as TUN transparent proxy impleme
 * [App Store](https://apps.apple.com/app/sing-box-vt/id6673731168)
 * TestFlight (Beta)
 
-TestFlight quota is only available to [sponsors](https://github.com/sponsors/nekohasekai)
-(one-time sponsorships are accepted).
-Once you donate, you can get an invitation by join our Telegram group for sponsors from [@yet_another_sponsor_bot](https://t.me/yet_another_sponsor_bot)
-or sending us your Apple ID [via email](mailto:contact@sagernet.org).
-
 ## :material-file-download: Download (macOS standalone version)
 
 * [Homebrew Cask](https://formulae.brew.sh/cask/sfm)

@@ -1,20 +1,57 @@
-> Sponsored by [Warp](https://go.warp.dev/sing-box), built for coding with multiple AI agents
-
-<a href="https://go.warp.dev/sing-box">
-<img alt="Warp sponsorship" width="400" src="https://github.com/warpdotdev/brand-assets/raw/refs/heads/main/Github/Sponsor/Warp-Github-LG-02.png">
-</a>
-
 ---
 
-# sing-box
+# amnezia-box
 
-The universal proxy platform.
+The universal proxy platform (fork of sing-box).
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/sing-box.svg)](https://repology.org/project/sing-box/versions)
 
-## Documentation
+## 📚 Documentation
 
-https://sing-box.sagernet.org
+- **Official Documentation**: https://sing-box.sagernet.org
+- **Architecture Guide**: [ARCHITECTURE.md](./ARCHITECTURE.md) - Детальное описание архитектуры и слоев
+- **Project Map**: [PROJECT_MAP.md](./PROJECT_MAP.md) - Быстрая карта проекта для навигации
+
+## 🏗️ Структура проекта
+
+### Основные компоненты
+
+- **`box.go`** - Главный координатор всех компонентов системы
+- **`adapter/`** - Интерфейсы и абстракции (Inbound, Outbound, Router, Service)
+- **`route/`** - Маршрутизация трафика и правила
+- **`dns/`** - DNS резолвинг и маршрутизация
+- **`protocol/`** - Реализации протоколов (Shadowsocks, VMess, VLESS, Trojan, Hysteria, WireGuard и др.)
+- **`transport/`** - Транспортные механизмы (WebSocket, gRPC, QUIC, HTTP и др.)
+- **`common/`** - Общие утилиты (dialer, TLS, certificate, process, sniff и др.)
+- **`option/`** - Конфигурация и опции
+- **`experimental/`** - Экспериментальные функции (ClashAPI, V2RayAPI, Libbox)
+
+### Клиентские приложения
+
+- **`clients/android/`** - Android приложение (Kotlin)
+- **`clients/apple/`** - iOS/macOS приложения (Swift)
+
+### Документация
+
+- **`docs/`** - Полная документация по конфигурации, установке и использованию
+
+## 🎯 Быстрый старт для разработчиков
+
+1. **Изучите архитектуру**: Начните с [ARCHITECTURE.md](./ARCHITECTURE.md) для понимания структуры
+2. **Используйте карту проекта**: [PROJECT_MAP.md](./PROJECT_MAP.md) для быстрой навигации
+3. **Точка входа**: `box.go` - главный файл системы
+4. **Маршрутизация**: `route/router.go` - логика маршрутизации соединений
+5. **Протоколы**: `protocol/` - примеры реализации протоколов
+
+## 📖 Для AI-ассистентов
+
+Если вы AI-ассистент, работающий с этим проектом:
+
+1. **Начните с [PROJECT_MAP.md](./PROJECT_MAP.md)** - быстрая навигация по структуре
+2. **Изучите [ARCHITECTURE.md](./ARCHITECTURE.md)** - понимание архитектуры и взаимодействия компонентов
+3. **Используйте `box.go`** как точку отсчета для понимания инициализации
+4. **Интерфейсы в `adapter/`** определяют контракты между компонентами
+5. **Примеры реализации** находятся в `protocol/` и `transport/`
 
 ## License
 

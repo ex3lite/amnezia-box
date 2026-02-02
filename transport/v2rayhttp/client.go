@@ -72,7 +72,7 @@ func NewClient(ctx context.Context, dialer N.Dialer, serverAddr M.Socksaddr, opt
 	requestURL.Path = options.Path
 	err := sHTTP.URLSetPath(&requestURL, options.Path)
 	if err != nil {
-		return nil, E.Cause(err, "parse path")
+		return nil, E.Cause(err, "парсинг пути")
 	}
 	if !strings.HasPrefix(requestURL.Path, "/") {
 		requestURL.Path = "/" + requestURL.Path
@@ -146,7 +146,7 @@ func (c *Client) dialHTTP2(ctx context.Context) (net.Conn, error) {
 			conn.Setup(nil, err)
 		} else if response.StatusCode != 200 {
 			response.Body.Close()
-			conn.Setup(nil, E.New("v2ray-http: unexpected status: ", response.Status))
+			conn.Setup(nil, E.New("v2ray-http: неожиданный статус: ", response.Status))
 		} else {
 			conn.Setup(response.Body, nil)
 		}

@@ -116,7 +116,7 @@ func (c *ClientBind) receive(packets [][]byte, sizes []int, eps []conn.Endpoint)
 			return
 		default:
 		}
-		c.logger.Error(E.Cause(err, "connect to server"))
+		c.logger.Error(E.Cause(err, "подключение к серверу"))
 		err = nil
 		c.pauseManager.WaitActive()
 		time.Sleep(time.Second)
@@ -128,7 +128,7 @@ func (c *ClientBind) receive(packets [][]byte, sizes []int, eps []conn.Endpoint)
 		select {
 		case <-c.done:
 		default:
-			c.logger.Error(E.Cause(err, "read packet"))
+			c.logger.Error(E.Cause(err, "чтение пакета"))
 			err = nil
 		}
 		return

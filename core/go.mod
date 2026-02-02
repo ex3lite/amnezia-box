@@ -1,0 +1,57 @@
+module github.com/sagernet/amnezia-box-core
+
+go 1.24.4
+
+require (
+	github.com/amnezia-vpn/amneziawg-go v0.2.15
+	github.com/anytls/sing-anytls v0.0.11
+	github.com/caddyserver/certmagic v0.23.0
+	github.com/coder/websocket v1.8.13
+	github.com/cretz/bine v0.2.0
+	github.com/go-chi/chi/v5 v5.2.2
+	github.com/go-chi/render v1.0.3
+	github.com/godbus/dbus/v5 v5.1.1-0.20230522191255-76236955d466
+	github.com/gofrs/uuid/v5 v5.3.2
+	github.com/insomniacslk/dhcp v0.0.0-20250417080101-5f8cf70e8c5f
+	github.com/libdns/alidns v1.0.5-libdns.v1.beta1
+	github.com/libdns/cloudflare v0.2.2-0.20250708034226-c574dccb31a6
+	github.com/logrusorgru/aurora v2.0.3+incompatible
+	github.com/metacubex/tfo-go v0.0.0-20250921095601-b102db4216c0
+	github.com/metacubex/utls v1.8.3
+	github.com/mholt/acmez/v3 v3.1.2
+	github.com/miekg/dns v1.1.67
+	github.com/oschwald/maxminddb-golang v1.13.1
+	github.com/sagernet/asc-go v0.0.0-20241217030726-d563060fe4e1
+	github.com/sagernet/bbolt v0.0.0-20231014093535-ea5cb2fe9f0a
+	github.com/sagernet/cors v1.2.1
+	github.com/sagernet/fswatch v0.1.1
+	github.com/sagernet/gomobile v0.1.8
+	github.com/sagernet/gvisor v0.0.0-20250325023245-7a9c0f5725fb
+	github.com/sagernet/quic-go v0.52.0-sing-box-mod.3
+	github.com/sagernet/sing v0.7.13
+	github.com/sagernet/sing-mux v0.3.3
+	github.com/sagernet/sing-quic v0.5.2-0.20250909083218-00a55617c0fb
+	github.com/sagernet/sing-shadowsocks v0.2.8
+	github.com/sagernet/sing-shadowsocks2 v0.2.1
+	github.com/sagernet/sing-shadowtls v0.2.1-0.20250503051639-fcd445d33c11
+	github.com/sagernet/sing-tun v0.7.3
+	github.com/sagernet/sing-vmess v0.2.7
+	github.com/sagernet/smux v1.5.34-mod.2
+	github.com/sagernet/tailscale v1.80.3-sing-box-1.12-mod.2
+	github.com/sagernet/wireguard-go v0.0.1-beta.7
+	github.com/sagernet/ws v0.0.0-20231204124109-acfe8907c854
+	github.com/spf13/cobra v1.9.1
+	github.com/stretchr/testify v1.10.0
+	github.com/vishvananda/netns v0.0.5
+	go.uber.org/zap v1.27.0
+	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba
+	golang.org/x/crypto v0.41.0
+	golang.org/x/exp v0.0.0-20250506013437-ce4c2cf36ca6
+	golang.org/x/mod v0.27.0
+	golang.org/x/net v0.43.0
+	golang.org/x/sys v0.35.0
+	golang.zx2c4.com/wireguard/wgctrl v0.0.0-20241231184526-a9ab2273dd10
+	google.golang.org/grpc v1.73.0
+	google.golang.org/protobuf v1.36.6
+	howett.net/plist v1.0.1
+)

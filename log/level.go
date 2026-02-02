@@ -54,6 +54,6 @@ func ParseLevel(level string) (Level, error) {
 	case "panic":
 		return LevelPanic, nil
 	default:
-		return LevelTrace, E.New("unknown log level: ", level)
+		return LevelTrace, E.New("неизвестный уровень лога: ", level)
 	}
 }

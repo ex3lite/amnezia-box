@@ -213,7 +213,7 @@ func ClientHandshake(conn net.Conn, key [KeyLength]byte, destination M.Socksaddr
 	common.Must1(header.Write(payload))
 	_, err = conn.Write(header.Bytes())
 	if err != nil {
-		return E.Cause(err, "write request")
+		return E.Cause(err, "запись запроса")
 	}
 	return nil
 }
@@ -231,7 +231,7 @@ func ClientHandshakeBuffer(conn net.Conn, key [KeyLength]byte, destination M.Soc
 
 	_, err = conn.Write(payload.Bytes())
 	if err != nil {
-		return E.Cause(err, "write request")
+		return E.Cause(err, "запись запроса")
 	}
 	return nil
 }
@@ -263,13 +263,13 @@ func ClientHandshakePacket(conn net.Conn, key [KeyLength]byte, destination M.Soc
 	if writeHeader {
 		_, err := conn.Write(header.Bytes())
 		if err != nil {
-			return E.Cause(err, "write request")
+			return E.Cause(err, "запись запроса")
 		}
 	}
 
 	_, err = conn.Write(payload.Bytes())
 	if err != nil {
-		return E.Cause(err, "write payload")
+		return E.Cause(err, "запись полезной нагрузки")
 	}
 	return nil
 }
@@ -277,18 +277,18 @@ func ClientHandshakePacket(conn net.Conn, key [KeyLength]byte, destination M.Soc
 func ReadPacket(conn net.Conn, buffer *buf.Buffer) (M.Socksaddr, error) {
 	destination, err := M.SocksaddrSerializer.ReadAddrPort(conn)
 	if err != nil {
-		return M.Socksaddr{}, E.Cause(err, "read destination")
+		return M.Socksaddr{}, E.Cause(err, "чтение адреса назначения")
 	}
 
 	var length uint16
 	err = binary.Read(conn, binary.BigEndian, &length)
 	if err != nil {
-		return M.Socksaddr{}, E.Cause(err, "read chunk length")
+		return M.Socksaddr{}, E.Cause(err, "чтение длины чанка")
 	}
 
 	err = rw.SkipN(conn, 2)
 	if err != nil {
-		return M.Socksaddr{}, E.Cause(err, "skip crlf")
+		return M.Socksaddr{}, E.Cause(err, "пропуск crlf")
 	}
 
 	_, err = buffer.ReadFullFrom(conn, int(length))
@@ -307,7 +307,7 @@ func WritePacket(conn net.Conn, buffer *buf.Buffer, destination M.Socksaddr) err
 	common.Must1(header.Write(CRLF))
 	_, err = conn.Write(buffer.Bytes())
 	if err != nil {
-		return E.Cause(err, "write packet")
+		return E.Cause(err, "запись пакета")
 	}
 	return nil
 }

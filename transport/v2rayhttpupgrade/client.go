@@ -54,7 +54,7 @@ func NewClient(ctx context.Context, dialer N.Dialer, serverAddr M.Socksaddr, opt
 	requestURL.Path = options.Path
 	err := sHTTP.URLSetPath(&requestURL, options.Path)
 	if err != nil {
-		return nil, E.Cause(err, "parse path")
+		return nil, E.Cause(err, "парсинг пути")
 	}
 	if !strings.HasPrefix(requestURL.Path, "/") {
 		requestURL.Path = "/" + requestURL.Path
@@ -104,7 +104,7 @@ func (c *Client) DialContext(ctx context.Context) (net.Conn, error) {
 	if response.StatusCode != 101 ||
 		!strings.EqualFold(response.Header.Get("Connection"), "upgrade") ||
 		!strings.EqualFold(response.Header.Get("Upgrade"), "websocket") {
-		return nil, E.New("v2ray-http-upgrade: unexpected status: ", response.Status)
+		return nil, E.New("v2ray-http-upgrade: неожиданный статус: ", response.Status)
 	}
 	if bufReader.Buffered() > 0 {
 		buffer := buf.NewSize(bufReader.Buffered())

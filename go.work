@@ -1,0 +1,10 @@
+go 1.24
+
+use (
+    ./core
+    ./module-ios
+    ./module-android
+    ./module-windows
+    ./module-linux
+    ./module-server
+)

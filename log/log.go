@@ -60,7 +60,7 @@ func New(options Options) (Factory, error) {
 	if logOptions.Level != "" {
 		logLevel, err := ParseLevel(logOptions.Level)
 		if err != nil {
-			return nil, E.Cause(err, "parse log level")
+			return nil, E.Cause(err, "парсинг уровня лога")
 		}
 		factory.SetLevel(logLevel)
 	} else {
